@@ -1,6 +1,6 @@
 public class PullerController
 {
-    public Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+    private static Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
     public FieldsWrapper fw { get; set; }
 
     public PullerController() {
