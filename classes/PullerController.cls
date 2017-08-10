@@ -5,7 +5,7 @@ public class PullerController
 
     public PullerController() {
         fw = new FieldsWrapper();
-		initObjNames();
+        initObjNames();
         resetFileds();
     }
 
