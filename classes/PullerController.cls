@@ -28,7 +28,7 @@ public class PullerController
         fields = new List<Pair>();
         resetFileds();
     }
-    
+
     private void initObjNames() {
         andOrList = new List<SelectOption>();
 		andOrList.add(new SelectOption(AND_STR, AND_STR));
@@ -43,14 +43,16 @@ public class PullerController
         List<String> entities = new List<String>(schemaMap.keySet());
         entities.sort();
         objectNames.add(new SelectOption('-', '-'));
-        for(String name : entities)
-        	objectNames.add(new SelectOption(name,name));
+        for(String name : entities) {
+            objectNames.add(new SelectOption(name, name));
+        }
     }
     
     public void showFields()  {
         resetFileds();
-        if (selectedObject == '-')
+        if (selectedObject == '-') {
             return;
+        }
         Map <String, Schema.SObjectField> fieldMap = schemaMap.get(selectedObject).getDescribe().fields.getMap();
         List<String> fields = new List<String>(fieldMap.keySet());
         fields.sort();
@@ -154,8 +156,9 @@ public class PullerController
     }
     
     public void removeCondition() {
-        if (!conditions.isEmpty())
-        	conditions.remove(conditions.size() - 1);
+        if (!conditions.isEmpty()) {
+            conditions.remove(conditions.size() - 1);
+        }
     }
     
     private void resetFileds()
