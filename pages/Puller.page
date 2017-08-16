@@ -15,10 +15,10 @@
                  <apex:pageMessages />
                     <apex:outputLabel style="font-size: 130%;" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}">fw.conditions</apex:outputLabel>
           	  <br/>
-                    <apex:commandButton image="{!$Resource.Plus_icon}" style="width:20px;" title="Add condition" reRender="block"
+                    <apex:commandButton image="{!URLFOR($Resource.images,'icons/Plus_icon.png')}" style="width:20px;" title="Add condition" reRender="block"
                                         action="{!addCondition}" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}" value="Add condition"/>
                     <br/>
-                    
+
                     <apex:repeat value="{!fw.conditions}" var="c" id="theRepeat" rendered="{!not(isnull(fw.selectedObject))  && fw.fieldCount != 0}">
                             <apex:selectList value="{!c.andOrSelected}" size="1"  >
                                 <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels, labels_2"/>
@@ -40,20 +40,20 @@
                             </apex:inputText>
                             <br/>
                       </apex:repeat>
-                
-                <apex:commandButton image="{!$Resource.Minus_icon}" style="width:20px;" title="Remove condition" action="{!removeCondition}" reRender="block"
+
+                <apex:commandButton image="{!URLFOR($Resource.images,'icons/Minus_icon.png')}" style="width:20px;" title="Remove condition" action="{!removeCondition}" reRender="block"
                                     rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0 && fw.conditions.size > 0}" value="Remove condition"/>
-           		<br/> 
+           		<br/>
             </apex:pageBlock>
 
-            <apex:pageblocksection id="labels" rendered="{!not(isnull(fw.selectedObject)) }" columns="1">   
+            <apex:pageblocksection id="labels" rendered="{!not(isnull(fw.selectedObject)) }" columns="1">
          	   <apex:outputText style="font-size: 130%;" value="{!fw.query}" rendered="{!not(isnull(fw.selectedObject)) }"/>
                 <apex:outputText style="font-size: 110%;" value="{!fw.selectResult}" escape="false" rendered="{!not(isnull(fw.selectedObject))}"/>
             </apex:pageblocksection>
-            
+
             <apex:commandButton title="Select from database" action="{!queryDb}" value="Select from database" rendered="{!fw.fieldCount != 0}" id="wtf"/>
             <br/> <br/>
-            
+
             <apex:pageBlockTable id="table" value="{!fw.fields}" var="field" rendered="{!not(isnull(fw.selectedObject))}">
                 <apex:column headerValue="Selected" width="5%">
                     <apex:inputCheckbox value="{!field.selected}">
