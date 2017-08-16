@@ -134,6 +134,7 @@ public class PullerController
         }
     }
 
+    @TestVisible
     private class FieldsWrapper {
         public List <Pair> lstfieldname{ get; set; }
         public List <Pair> fields {
@@ -182,11 +183,13 @@ public class PullerController
         }
     }
 
+    @TestVisible
     private class Pair  {
         public String name { get; set; }
         public Boolean selected { get; set; }
     }
-    
+
+    @TestVisible
     private class Condition {
         public String value { get; set; }
         public String andOrSelected { get; set; }
