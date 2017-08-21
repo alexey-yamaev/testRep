@@ -13,7 +13,7 @@
             <apex:pageBlock >
          	 
                  <apex:pageMessages />
-                    <apex:outputLabel style="font-size: 130%;" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}">fw.conditions</apex:outputLabel>
+                    <apex:outputLabel style="font-size: 130%;" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}">conditions</apex:outputLabel>
           	  <br/>
                     <apex:commandButton image="{!URLFOR($Resource.images,'icons/Plus_icon.png')}" style="width:20px;" title="Add condition" reRender="block"
                                         action="{!addCondition}" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}" value="Add condition"/>
@@ -21,22 +21,22 @@
 
                     <apex:repeat value="{!fw.conditions}" var="c" id="theRepeat" rendered="{!not(isnull(fw.selectedObject))  && fw.fieldCount != 0}">
                             <apex:selectList value="{!c.andOrSelected}" size="1"  >
-                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels, labels_2"/>
+                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels"/>
                                <apex:selectOptions value="{!fw.andOrlist}" />
                             </apex:selectList> &nbsp; &nbsp; &nbsp;
 
                             <apex:selectList value="{!c.fieldSelected}" size="1"  >
-                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels, labels_2"/>
+                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels"/>
                                <apex:selectOptions value="{!fw.fieldNames}" />
                             </apex:selectList> &nbsp; &nbsp; &nbsp;
 
                             <apex:selectList value="{!c.operatorSelected}" size="1"  >
-                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels, labels_2"/>
+                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels"/>
                                <apex:selectOptions value="{!fw.operatorsList}" />
                             </apex:selectList> &nbsp; &nbsp; &nbsp;
 
                             <apex:inputText value="{!c.value}" >
-                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels, labels_2"/>
+                                <apex:actionSupport event="onchange" action="{!constructQuery}" reRender="labels"/>
                             </apex:inputText>
                             <br/>
                       </apex:repeat>
