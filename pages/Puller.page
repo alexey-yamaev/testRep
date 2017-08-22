@@ -15,7 +15,7 @@
                  <apex:pageMessages />
                     <apex:outputLabel style="font-size: 130%;" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}">conditions</apex:outputLabel>
           	  <br/>
-                    <apex:commandButton image="{!URLFOR($Resource.images,'icons/Plus_icon.png')}" style="width:20px;" title="Add condition" reRender="block"
+                    <apex:commandButton image="{!URLFOR($Resource.resources,'icons/Plus_icon.png')}" style="width:20px;" title="Add condition" reRender="block"
                                         action="{!addCondition}" rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0}" value="Add condition"/>
                     <br/>
 
@@ -41,7 +41,7 @@
                             <br/>
                       </apex:repeat>
 
-                <apex:commandButton image="{!URLFOR($Resource.images,'icons/Minus_icon.png')}" style="width:20px;" title="Remove condition" action="{!removeCondition}" reRender="block"
+                <apex:commandButton image="{!URLFOR($Resource.resources,'icons/Minus_icon.png')}" style="width:20px;" title="Remove condition" action="{!removeCondition}" reRender="block"
                                     rendered="{!not(isnull(fw.selectedObject)) && fw.fieldCount != 0 && fw.conditions.size > 0}" value="Remove condition"/>
            		<br/>
             </apex:pageBlock>

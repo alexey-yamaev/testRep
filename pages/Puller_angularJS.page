@@ -1,0 +1,124 @@
+
+<apex:page standardStylesheets="false" sidebar="false" showHeader="false" Controller="PullerControllerJS">
+    <head>
+        <style>
+            div {
+                white-space: pre-wrap;
+            }
+        </style>
+        <apex:includeScript value="{!URLFOR($Resource.resources, '/angular.min.js')}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+              integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"/>
+    </head>
+
+    <body id="test">
+
+        <div class="container" ng-app="pullerApp" ng-controller="objectsCtrl">
+
+            <div >Choose object
+                <select name="multipleSelect" ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()">
+                </select>
+
+                <h3>{{ query }}</h3>
+                <button ng-click="queryDB()">Select!</button>
+            </div>
+
+            <div class="row vertical-align">
+                <div class="col-md-4" style="background-color: lightgreen">
+                    <h3>Fields</h3>
+                    <table>
+                        <tr ng-repeat="(number, field) in fieldList track by number">
+                            <td> <input type="checkbox" ng-model="field.selected" ng-change="updateQuery()"/> </td>
+                            <td>{{ field.name }}</td>
+
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-4" style="background-color: lightcoral">
+                    <h3>Conditions</h3>
+                </div>
+
+                <div class="col-md-4" style="background-color: lightcyan">
+                    <h3>Result</h3>
+                    <output style="escape: false">{{ queryResult }}</output>
+
+                </div>
+            </div>
+
+            <!--table>
+                <thead>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="15%" style="background-color: lightgreen" class="align-baseline">
+                            <h4>Fields</h4>
+                            <table>
+                                <tr ng-repeat="(number, field) in fieldList track by number">
+                                    <td> <input type="checkbox" ng-model="field.selected" ng-change="updateQuery()"/> </td>
+                                    <td>{{ field.name }}</td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td width="20%" style="background-color: lightcoral" class="align-baseline">
+                            <h4>Conditions</h4>
+                        </td>
+
+                        <td  style="background-color: lightcyan" class="align-baseline">
+                            <h4>Result</h4>
+                            <output >{{ queryResult }}</output>
+                        </td>
+                    </tr>
+                </tbody>
+            </table-->
+
+        </div>
+
+        <script>
+            var app = angular.module('pullerApp',[]);
+            app.controller('objectsCtrl',['$scope',function($scope) {
+                $scope.objectList = Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.getObjectNames}',
+                         function(result, event) {
+                            $scope.objectList = result;
+                            $scope.$apply();
+                         });
+
+                 $scope.showFields = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.getFieldList}',
+                        $scope.selectedObject,
+                         function(result, event) {
+                            $scope.fieldList = result;
+                            $scope.$apply();
+                         });
+                     }
+
+                 $scope.updateQuery = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.constructQuery}',
+                        $scope.fieldList,
+                        $scope.selectedObject,
+                         function(result, event) {
+                            $scope.query = result;
+                            $scope.$apply();
+                         });
+                     }
+
+                 $scope.queryDB = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.queryDB}',
+                        $scope.fieldList,
+                        $scope.selectedObject,
+                         function(result, event) {
+                            $scope.queryResult = result;
+                            $scope.$apply();
+                         });
+                     }
+
+            }]);
+        </script>
+    </body>
+</apex:page>
