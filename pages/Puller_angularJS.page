@@ -2,9 +2,6 @@
 <apex:page standardStylesheets="false" sidebar="false" showHeader="false" Controller="PullerControllerJS">
     <head>
         <style>
-            div {
-                white-space: pre-wrap;
-            }
         </style>
         <apex:includeScript value="{!URLFOR($Resource.resources, '/angular.min.js')}"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -15,15 +12,16 @@
 
         <div class="container" ng-app="pullerApp" ng-controller="objectsCtrl">
 
-            <div >Choose object
-                <select name="multipleSelect" ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()">
-                </select>
-
-                <h3>{{ query }}</h3>
-                <button ng-click="queryDB()">Select!</button>
+            <div class="well" style="text-align: center">
+                <h3> Choose object </h3>
+                <select name="multipleSelect" ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()"/>
+                <br/>
+                <h3> {{ query }} </h3>
+                <button ng-click="queryDB()" class="btn btn-primary btn-block">Select!</button>
             </div>
+            <br/>
 
-            <div class="row vertical-align">
+            <div class="row">
                 <div class="col-md-4" style="background-color: lightgreen">
                     <h3>Fields</h3>
                     <table>
@@ -37,11 +35,32 @@
 
                 <div class="col-md-4" style="background-color: lightcoral">
                     <h3>Conditions</h3>
+                    <button ng-click="addCondition()" >Add</button>
+                    <div ng-repeat="(number, condition) in conditions track by number">
+                        <select name="multipleSelect" id="multipleSelect"  ng-model="condition.andOrSelected">
+                            <option value="AND">AND</option>
+                            <option value="OR">OR</option>
+                        </select>
+                        <select ng-model="condition.field">
+                            <option ng-repeat="(number, field) in fieldList track by number"
+                                    value="{{field.name}}">{{field.name}}</option>
+                        </select>
+
+                        <select ng-model="condition.operatorSelected">
+                            <option value="=">=</option>
+                            <option value="!=">!=</option>
+                            <option value="LIKE">LIKE</option>
+                        </select>
+                        <input ng-model="condition.value"/>
+                        <button ng-click="removeCondition(number)">Remove</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4" style="background-color: lightcyan">
                     <h3>Result</h3>
-                    <output style="escape: false">{{ queryResult }}</output>
+                    <output style="escape: false">
+                        <pre>{{ queryResult }}</pre>
+                    </output>
 
                 </div>
             </div>
@@ -79,7 +98,15 @@
         <script>
             var app = angular.module('pullerApp',[]);
             app.controller('objectsCtrl',['$scope',function($scope) {
-                $scope.objectList = Visualforce.remoting.Manager.invokeAction(
+                Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.getConditions}',
+                         function(result, event) {
+                             console.log("getConditions");
+                             $scope.conditions = result;
+                             $scope.$apply();
+                         });
+
+                Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.getObjectNames}',
                          function(result, event) {
                             $scope.objectList = result;
@@ -87,6 +114,7 @@
                          });
 
                  $scope.showFields = function () {
+                        $scope.query = "Choose fields to select from database";
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.getFieldList}',
                         $scope.selectedObject,
@@ -101,6 +129,7 @@
                         '{!$RemoteAction.PullerControllerJS.constructQuery}',
                         $scope.fieldList,
                         $scope.selectedObject,
+                        $scope.conditions,
                          function(result, event) {
                             $scope.query = result;
                             $scope.$apply();
@@ -112,10 +141,34 @@
                         '{!$RemoteAction.PullerControllerJS.queryDB}',
                         $scope.fieldList,
                         $scope.selectedObject,
+                        $scope.conditions,
                          function(result, event) {
                             $scope.queryResult = result;
                             $scope.$apply();
                          });
+                     }
+
+                 $scope.addCondition = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.addCondition}',
+                        $scope.conditions,
+                        function(result, event) {
+                           console.log("Add condition");
+                           $scope.conditions = result;
+                           $scope.$apply();
+                        });
+                     }
+
+                 $scope.removeCondition = function (number) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerJS.removeCondition}',
+                        $scope.conditions,
+                        number,
+                        function(result, event) {
+                           console.log("Remove condition");
+                           $scope.conditions = result;
+                           $scope.$apply();
+                        });
                      }
 
             }]);
