@@ -3,34 +3,60 @@
     <head>
         <style>
         </style>
+
         <apex:includeScript value="{!URLFOR($Resource.resources, '/angular.min.js')}"/>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
               integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"/>
+
     </head>
 
     <body id="test">
 
-        <div class="container" ng-app="pullerApp" ng-controller="objectsCtrl">
+        <div class="container-fluid" ng-app="pullerApp" ng-controller="objectsCtrl">
 
             <div class="well" style="text-align: center">
-                <h3> Choose object </h3>
-                <select name="multipleSelect" ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()"/>
+                <h3 ng-show="!selectedObject"> Choose object </h3>
+                <select ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()"/>
                 <br/>
                 <h3> {{ query }} </h3>
-                <button ng-click="queryDB()" class="btn btn-primary btn-block">Select!</button>
+                <button ng-click="queryDB()" class="btn btn-primary btn-block" ng-show="selectedObject">Select</button>
             </div>
             <br/>
 
-            <div class="row">
+            <div class="row" ng-show="selectedObject">
                 <div class="col-md-4" style="background-color: lightgreen">
                     <h3>Fields</h3>
-                    <table>
-                        <tr ng-repeat="(number, field) in fieldList track by number">
-                            <td> <input type="checkbox" ng-model="field.selected" ng-change="updateQuery()"/> </td>
-                            <td>{{ field.name }}</td>
+                    <table class="table table-striped table-hover table-bordered" >
 
+                        <thead>
+                        <tr>
+                            <td>
+                                <input ng-model="search" class="form-control" placeholder="Search"/>
+                            </td>
                         </tr>
+                        <tr>
+                            <th ng-click="sort('selected')">Selected
+                                <span class="glyphicon sort-icon" ng-show="sortKey=='selected'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th ng-click="sort('name')">Name
+                                <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="(number, field) in fieldList|orderBy:sortKey:reverse|filter:search|filter:paginate track by number">
+                                <td> <input type="checkbox" ng-model="field.selected" ng-change="updateQuery()"/> </td>
+                                <td>{{ field.name }}</td>
+                            </tr>
+                        </tbody>
+
                     </table>
+                    <pagination total-items="totalItems" ng-model="currentPage"
+                                max-size="4" boundary-links="true"
+                                items-per-page="numPerPage" class="pagination-sm">
+                    </pagination>
                 </div>
 
                 <div class="col-md-4" style="background-color: lightcoral">
@@ -59,45 +85,21 @@
                 <div class="col-md-4" style="background-color: lightcyan">
                     <h3>Result</h3>
                     <output style="escape: false">
-                        <pre>{{ queryResult }}</pre>
+                        {{ queryResult }}
                     </output>
 
                 </div>
             </div>
 
-            <!--table>
-                <thead>
-
-                </thead>
-                <tbody>
-                    <tr>
-                        <td width="15%" style="background-color: lightgreen" class="align-baseline">
-                            <h4>Fields</h4>
-                            <table>
-                                <tr ng-repeat="(number, field) in fieldList track by number">
-                                    <td> <input type="checkbox" ng-model="field.selected" ng-change="updateQuery()"/> </td>
-                                    <td>{{ field.name }}</td>
-                                </tr>
-                            </table>
-                        </td>
-
-                        <td width="20%" style="background-color: lightcoral" class="align-baseline">
-                            <h4>Conditions</h4>
-                        </td>
-
-                        <td  style="background-color: lightcyan" class="align-baseline">
-                            <h4>Result</h4>
-                            <output >{{ queryResult }}</output>
-                        </td>
-                    </tr>
-                </tbody>
-            </table-->
-
         </div>
 
         <script>
-            var app = angular.module('pullerApp',[]);
+            var app = angular.module('pullerApp', ['ui.bootstrap', 'ngResource']);
+
+
             app.controller('objectsCtrl',['$scope',function($scope) {
+
+
                 Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.getConditions}',
                          function(result, event) {
@@ -120,9 +122,22 @@
                         $scope.selectedObject,
                          function(result, event) {
                             $scope.fieldList = result;
-                            $scope.$apply();
+
+                          $scope.totalItems = $scope.fieldList.length;
+                          $scope.currentPage = 1;
+                          $scope.numPerPage = 10;
+                          $scope.$apply();
                          });
                      }
+
+
+                  $scope.paginate = function(value) {
+                    var begin, end, index;
+                    begin = ($scope.currentPage - 1) * $scope.numPerPage;
+                    end = begin + $scope.numPerPage;
+                    index = $scope.fieldList.indexOf(value);
+                    return (begin <= index && index < end);
+                  };
 
                  $scope.updateQuery = function () {
                         Visualforce.remoting.Manager.invokeAction(
@@ -171,7 +186,14 @@
                         });
                      }
 
+                $scope.sort = function(keyname){
+                        $scope.sortKey = keyname;   //set the sortKey to the param passed
+                        $scope.reverse = !$scope.reverse; //if true make it false and vice versa
+                    }
+
             }]);
         </script>
+    <script src="http://code.angularjs.org/1.2.16/angular-resource.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
     </body>
 </apex:page>
