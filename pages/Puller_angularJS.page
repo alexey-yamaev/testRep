@@ -1,14 +1,22 @@
 
 <apex:page standardStylesheets="false" sidebar="false" showHeader="false" Controller="PullerControllerJS">
     <head>
-        <style>
-        </style>
-
-        <apex:includeScript value="{!URLFOR($Resource.resources, '/angular.min.js')}"/>
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+        <meta charset="utf-8"/>
+        <apex:includeScript value="{!URLFOR($Resource.resources2, '/angular.min.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.resources2, '/bootstrap_3.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.resources2, '/bootstrap.min.css')}"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
               integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"/>
 
+        <style>
+               body {
+                   background: #f0f0f0;
+                   font-size: 1.5em;
+                   width:90%;
+                   margin-left: 5%;
+               }
+
+        </style>
     </head>
 
     <body id="test">
@@ -19,27 +27,23 @@
                 <h3 ng-show="!selectedObject"> Choose object </h3>
                 <select ng-model="selectedObject" ng-options="name for name in objectList" ng-change="showFields()"/>
                 <br/>
-                <h3> {{ query }} </h3>
-                <button ng-click="queryDB()" class="btn btn-primary btn-block" ng-show="selectedObject">Select</button>
+                <h3> <pre-wrap>{{ query }}</pre-wrap></h3>
+                <button ng-click="queryDB()" class="btn btn-primary btn-block" ng-show="selectedObject">SELECT</button>
             </div>
             <br/>
 
             <div class="row" ng-show="selectedObject">
-                <div class="col-md-4" style="background-color: lightgreen">
+
+                <div class="col-md-4" >
                     <h3>Fields</h3>
                     <table class="table table-striped table-hover table-bordered" >
 
                         <thead>
                         <tr>
-                            <td>
-                                <input ng-model="search" class="form-control" placeholder="Search"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th ng-click="sort('selected')">Selected
+                            <th ng-click="sort('selected')" ><a href="">Selected</a>
                                 <span class="glyphicon sort-icon" ng-show="sortKey=='selected'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
-                            <th ng-click="sort('name')">Name
+                            <th ng-click="sort('name')"><a href="">Name</a>
                                 <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
                         </tr>
@@ -59,9 +63,10 @@
                     </pagination>
                 </div>
 
-                <div class="col-md-4" style="background-color: lightcoral">
+                <div class="col-md-4" >
                     <h3>Conditions</h3>
-                    <button ng-click="addCondition()" >Add</button>
+                    <button ng-click="addCondition()" ><img src="{!URLFOR($Resource.resources2,'icons/Plus_icon.png')}"
+                                       style="vertical-align: middle" width="18" /></button>
                     <div ng-repeat="(number, condition) in conditions track by number">
                         <select name="multipleSelect" id="multipleSelect"  ng-model="condition.andOrSelected">
                             <option value="AND">AND</option>
@@ -78,27 +83,30 @@
                             <option value="LIKE">LIKE</option>
                         </select>
                         <input ng-model="condition.value"/>
-                        <button ng-click="removeCondition(number)">Remove</button>
+                        <button ng-click="removeCondition(number)"><img src="{!URLFOR($Resource.resources2,'icons/Minus_icon.png')}"
+                                     style="vertical-align: middle" width="18" /></button>
                     </div>
                 </div>
 
-                <div class="col-md-4" style="background-color: lightcyan">
+                <div class="col-md-4" >
                     <h3>Result</h3>
                     <output style="escape: false">
                         {{ queryResult }}
                     </output>
-
                 </div>
+
             </div>
+
+            <button ng-click="queryDB()" class="btn btn-primary btn-block" ng-show="selectedObject">SELECT</button>
 
         </div>
 
         <script>
             var app = angular.module('pullerApp', ['ui.bootstrap', 'ngResource']);
 
-
             app.controller('objectsCtrl',['$scope',function($scope) {
 
+                $scope.sortKey = "name";
 
                 Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.getConditions}',
@@ -115,7 +123,7 @@
                             $scope.$apply();
                          });
 
-                 $scope.showFields = function () {
+                $scope.showFields = function () {
                         $scope.query = "Choose fields to select from database";
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.getFieldList}',
@@ -125,21 +133,20 @@
 
                           $scope.totalItems = $scope.fieldList.length;
                           $scope.currentPage = 1;
-                          $scope.numPerPage = 10;
+                          $scope.numPerPage = 8;
                           $scope.$apply();
                          });
-                     }
+                }
 
-
-                  $scope.paginate = function(value) {
+                $scope.paginate = function(value) {
                     var begin, end, index;
                     begin = ($scope.currentPage - 1) * $scope.numPerPage;
                     end = begin + $scope.numPerPage;
                     index = $scope.fieldList.indexOf(value);
                     return (begin <= index && index < end);
-                  };
+                };
 
-                 $scope.updateQuery = function () {
+                $scope.updateQuery = function () {
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.constructQuery}',
                         $scope.fieldList,
@@ -149,9 +156,9 @@
                             $scope.query = result;
                             $scope.$apply();
                          });
-                     }
+                }
 
-                 $scope.queryDB = function () {
+                $scope.queryDB = function () {
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.queryDB}',
                         $scope.fieldList,
@@ -159,11 +166,12 @@
                         $scope.conditions,
                          function(result, event) {
                             $scope.queryResult = result;
+                            $scope.query = $scope.updateQuery();
                             $scope.$apply();
                          });
-                     }
+                }
 
-                 $scope.addCondition = function () {
+                $scope.addCondition = function () {
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.addCondition}',
                         $scope.conditions,
@@ -172,9 +180,9 @@
                            $scope.conditions = result;
                            $scope.$apply();
                         });
-                     }
+                }
 
-                 $scope.removeCondition = function (number) {
+                $scope.removeCondition = function (number) {
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerJS.removeCondition}',
                         $scope.conditions,
@@ -184,12 +192,12 @@
                            $scope.conditions = result;
                            $scope.$apply();
                         });
-                     }
+                }
 
                 $scope.sort = function(keyname){
                         $scope.sortKey = keyname;   //set the sortKey to the param passed
                         $scope.reverse = !$scope.reverse; //if true make it false and vice versa
-                    }
+                }
 
             }]);
         </script>

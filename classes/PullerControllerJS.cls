@@ -1,7 +1,6 @@
 public class PullerControllerJS
 {
     private static Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-    public FieldsWrapper fw { get; set; }
     public static List<String> objectNames = new List<String>();
     public static List<Pair> fieldList = new List<Pair>();
     public static List<Condition> conditions = new List<Condition>();
@@ -38,36 +37,11 @@ public class PullerControllerJS
         return fieldNames;
     }
 
-    public PullerControllerJS() {
-        fw = new FieldsWrapper();
-        initObjNames();
-        resetFileds();
-    }
-
     private static void initObjNames() {
         List<String> entities = new List<String>(schemaMap.keySet());
         entities.sort();
         for(String name : entities) {
             objectNames.add(name);
-        }
-    }
-
-    public void showFields()  {
-        resetFileds();
-        if (fw.selectedObject == '-') {
-            return;
-        }
-        Map <String, Schema.SObjectField> fieldMap = schemaMap.get(fw.selectedObject).getDescribe().fields.getMap();
-        List<String> fields = new List<String>(fieldMap.keySet());
-        fields.sort();
-        fw.fieldNames =  new List<SelectOption>();
-
-        for (String name : fields) {
-            Pair field = new Pair();
-            field.name = name;
-            field.selected = false;
-            fw.lstfieldname.add(field);
-            fw.fieldNames.add(new SelectOption(name, name));
         }
     }
 
@@ -85,6 +59,7 @@ public class PullerControllerJS
         query += ' FROM ' + selectedObject;
         if (fieldCount == 0) {
             query = 'Choose fields to select from database';
+            return query;
         }
 
         Boolean firstCondition = true;
@@ -130,7 +105,7 @@ public class PullerControllerJS
     public static String queryDB(List<Pair> fieldList, String selectedObject, List<Condition> conditions) {
         String query = constructQuery(fieldList, selectedObject, conditions);
         String queryResultStr;
-        if (query != 'Choose fields to select from database' && !fieldList.isEmpty()) {
+        if (!query.contains('Choose fields to select from database') && !fieldList.isEmpty()) {
             List<sObject> selectResult = new List<sObject>();
             system.debug('fieldList ' + fieldList);
             system.debug('query' + query);
@@ -152,14 +127,9 @@ public class PullerControllerJS
             }
         }
         else {
-        //    query = 'No fields are selected';
             queryResultStr = 'No fields are selected';
         }
         return queryResultStr;
-    }
-
-    public void resetFileds() {
-        fw.resetFileds();
     }
 
     @RemoteAction
@@ -179,53 +149,6 @@ public class PullerControllerJS
     @RemoteAction
     public static List<Condition> getConditions() {
         return conditions;
-    }
-
-    private class FieldsWrapper {
-        public List <Pair> lstfieldname{ get; set; }
-        public List <Pair> fields {
-            get {
-                return lstfieldname;
-            }
-            set {
-                lstfieldname = value;
-            }
-        }
-        public String selectedObject { get; set; }
-        public String query { get; set; }
-        public String selectResult { get; set; }
-        public Integer fieldCount { get; set; }
-        public List <SelectOption> andOrList { public get; private set; }
-        public List <SelectOption> operatorsList { public get; private set; }
-   //     public List <Condition> conditions { public get; private set; }
-        public List <SelectOption> fieldNames { public get; private set; }
-        private final String AND_STR = 'AND';
-        private final String OR_STR = 'OR';
-
-        public FieldsWrapper() {
-            andOrList = new List<SelectOption>();
-            andOrList.add(new SelectOption(AND_STR, AND_STR));
-            andOrList.add(new SelectOption(OR_STR, OR_STR));
-
-            operatorsList = new List<SelectOption>();
-            operatorsList.add(new SelectOption('=', '='));
-            operatorsList.add(new SelectOption('!=', '!='));
-            operatorsList.add(new SelectOption('LIKE', 'LIKE'));
-
-      //      objectOptions = new List<SelectOption>();
-      //      objectOptions.add(new SelectOption('-', '-'));
-
-            conditions = new List<Condition>();
-            fields = new List<Pair>();
-        }
-
-        public void resetFileds() {
-            fields.clear();
-            conditions.clear();
-            query = 'Choose fields to select from database';
-            selectResult = '';
-            fieldCount = 0;
-        }
     }
 
     private class Pair  {
