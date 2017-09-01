@@ -30,6 +30,112 @@ public class PullerControllerSLDS {
         return fieldList;
     }
 
+    @RemoteAction
+    public static String constructQuery(List<Pair> fieldList, String selectedObject, List<Condition> conditions) {
+        String query = 'SELECT';
+        Integer fieldCount = 0;
+        for (Pair p : fieldList) {
+            if (p.selected) {
+                query += (fieldCount++ > 0) ? ',' : '' ;
+                query += ' ' + p.name;
+            }
+        }
+
+        query += ' FROM ' + selectedObject;
+        if (fieldCount == 0) {
+            query = 'Choose fields to select from database';
+            return query;
+        }
+
+        Boolean firstCondition = true;
+        if (!conditions.isEmpty()) {
+
+            String andCondition = '';
+            String orCondition = '';
+
+            for (Condition c : conditions) {
+                if (c.andOrSelected == 'AND' && !String.isEmpty(c.value)) {
+                    andCondition += 'AND ' + c.field + ' ' + c.operatorSelected;
+                    if (c.operatorSelected == 'LIKE') {
+                        andCondition += ' \'%' + c.value + '%\' ';
+                    } else {
+                        andCondition += ' \'' + c.value + '\' ';
+                    }
+                } else if (c.andOrSelected == 'OR' && !String.isEmpty(c.value)) {
+                    orCondition += 'OR ' + c.field + ' ' + c.operatorSelected;
+                    if (c.operatorSelected == 'LIKE') {
+                        orCondition += ' \'%' + c.value + '%\' ';
+                    } else {
+                        orCondition += ' \'' + c.value + '\' ';
+                    }
+                }
+            }
+
+            if (!String.isEmpty(andCondition)) {
+                query += ' WHERE ';
+                andCondition = andCondition.substring(4);
+                query += '( ' + andCondition + ' ) ';
+                query += orCondition;
+            }
+            else if (String.isEmpty(andCondition) && !String.isEmpty(orCondition)) {
+                query += ' WHERE ';
+                orCondition = orCondition.substring(3);
+                query += orCondition;
+            }
+        }
+        return query;
+    }
+
+    @RemoteAction
+    public static String queryDB(List<Pair> fieldList, String selectedObject, List<Condition> conditions) {
+        String query = constructQuery(fieldList, selectedObject, conditions);
+        String queryResultStr;
+        if (!query.contains('Choose fields to select from database') && !fieldList.isEmpty()) {
+            List<sObject> selectResult = new List<sObject>();
+            system.debug('fieldList ' + fieldList);
+            system.debug('query' + query);
+            try {
+                selectResult = Database.query(query);
+            }
+            catch (Exception e) {
+                return e.getMessage();
+            }
+
+
+            if (selectResult.size() != 0) {
+                queryResultStr = '';
+                for (Integer i=0; i < selectResult.size(); i++) {
+                    queryResultStr += selectResult.get(i) + '\n';
+                }
+            } else {
+                queryResultStr = 'No records were found';
+            }
+        }
+        else {
+            queryResultStr = 'No fields are selected';
+        }
+        return queryResultStr;
+    }
+
+    @RemoteAction
+    public static List<Condition> addCondition(List<Condition> conditions) {
+        conditions.add(new Condition());
+        return conditions;
+    }
+
+    @RemoteAction
+    public static List<Condition> removeCondition(List<Condition> conditions, Integer index) {
+        if (!conditions.isEmpty()) {
+            conditions.remove(index);
+        }
+        return conditions;
+    }
+
+    @RemoteAction
+    public static List<Condition> getConditions() {
+        return conditions;
+    }
+
     private static void initObjNames() {
         List<String> entities = new List<String>(schemaMap.keySet());
         entities.sort();

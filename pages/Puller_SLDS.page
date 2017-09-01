@@ -14,72 +14,90 @@
     <!-- REQUIRED SLDS WRAPPER -->
     <div class="slds-scope" ng-app="pullerApp" ng-controller="mainCtrl">
 
+        <div class="demo-only" ng-if="step == 0">
+            <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Object</div>
+        </div>
+        <div class="demo-only" ng-if="step == 1">
+            <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Fields of {{ selectedObject }}</div>
+        </div>
+        <div class="demo-only" ng-if="step == 2">
+            <div class="slds-text-color_inverse-weak slds-text-heading_mediim slds-text-align_center">Conditions of {{ selectedObject }}</div>
+        </div>
+
         <!-- progress -->
         <div class="demo-only" style="padding: 1rem; background: rgb(244, 246, 249);">
-            <div class="slds-progress slds-progress_shade">
-                <ol class="slds-progress__list">
-                    <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 0, 'slds-is-completed': step > 0}">
-                        <button class="slds-button slds-button_icon slds-progress__marker slds-progress__marker_icon" title="Step 1 - Completed">
-                            <svg class="slds-button__icon" aria-hidden="true" ng-show="selectedObject != ''">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
-                            </svg>
-                            <span class="slds-assistive-text">Step 1 - Completed</span>
-                        </button>
-                    </li>
-                    <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 1, 'slds-is-completed': step > 1}">
-                        <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 1,
-                        'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 1}">
-                            <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 1">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
-                            </svg>
-                            <span class="slds-assistive-text">Step 2 - Active</span>
-                        </button>
-                    </li>
-                    <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 2, 'slds-is-completed': step > 2}">
-                        <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 2,
-                        'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 2}">
-                            <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 2">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
-                            </svg>
-                            <span class="slds-assistive-text">Step 3 </span>
-                        </button>
-                    </li>
-                    <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 3, 'slds-is-completed': step > 3}">
-                        <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 3,
-                        'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 3}">
-                            <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 3">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
-                            </svg>
-                            <span class="slds-assistive-text">Step 4 </span>
-                        </button>
-                    </li>
-                    <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 4, 'slds-is-completed': step > 4}">
-                        <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 4,
-                        'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 4}">
-                            <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 4">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
-                            </svg>
-                            <span class="slds-assistive-text">Step 5 </span>
-                        </button>
-                    </li>
-                </ol>
-                <div class="slds-progress-bar slds-progress-bar_x-small" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar">
-              <span class="slds-progress-bar__value" ng-style="progress">
-                <span class="slds-assistive-text">Progress: 25%</span>
-              </span>
+            <div class="slds-grid slds-grid_align-spread">
+                <div >
+                    <button class="slds-button" ng-disabled="step == 0" ng-click="previousStep()" ng-show="selectedObject != ''">
+                        <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#left')}"></use>
+                        </svg>&#32;Previous</button>
                 </div>
+                <div class="slds-progress slds-progress_shade">
+                    <ol class="slds-progress__list">
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 0, 'slds-is-completed': step > 0}">
+                            <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 0,
+                            'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 0}" aria-describedby="step-0-tooltip">
+                                <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 0">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Conditions</span>
+                            </button>
+                        </li>
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 1, 'slds-is-completed': step > 1}">
+                            <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 1,
+                            'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 1}" aria-describedby="step-1-tooltip">
+                                <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 1" ng-if="fieldList.length > 0">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Object's fields</span>
+                            </button>
+                        </li>
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 2, 'slds-is-completed': step > 2}">
+                            <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 2,
+                            'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 2}" aria-describedby="step-2-tooltip">
+                                <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 2">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Conditions</span>
+                            </button>
+                        </li>
+                    </ol>
+                    <div class="slds-progress-bar slds-progress-bar_x-small" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar">
+                      <span class="slds-progress-bar__value" ng-style="progress">
+                        <span class="slds-assistive-text">Progress: 25%</span>
+                      </span>
+                    </div>
+
+                </div>
+
+                <div ng-show="selectedObject != ''">
+                    <button class="slds-button" ng-disabled="step == 2"  ng-click="nextStep()">Next &#32;<svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#right')}"></use>
+                    </svg></button>
+                </div>
+            </div>
+
+        </div>
+
+        <br/>
+        <div class="slds-grid slds-grid_align-space">
+            <div>
+                <button class="slds-button slds-button_brand" ng-click="queryDB()" ng-show="step != 0">Select from database</button>
             </div>
         </div>
         <!-- progress-->
 
         <br/>
+        <!--div class="slds-text-body_regular slds-align_absolute-center" ng-show="selectedObject != ''">{{ query }}</div-->
 
 
-        <div id="step_0" data-ng-init="init()" ng-show="step == 0">
+        <div id="step_0" data-ng-init="init()" ng-if="step == 0">
             <div class="slds-form-element slds-align_absolute-center">
                 <div class="slds-form-element__control">
                     <div class="slds-combobox_container slds-size_small">
                         <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                            <div class="slds-scrollable">
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right">
                                 <input type="text" class="slds-input slds-combobox__input" id="combobox-unique-id"
                                        aria-controls="listbox-unique-id"  autocomplete="off" role="textbox" placeholder="Search"
@@ -103,6 +121,7 @@
                                             </li>
                                         </ul>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,18 +130,15 @@
         </div>
 
 
-        <div id="step_1" ng-show="step == 1">
+        <div id="step_1" ng-if="step == 1" >
 
-
-
-            <button class="slds-button" ng-click="showConditions()">Next</button>
-            <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout" role="grid" >
-                <thead>
+            <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout slds-align_absolute-center" role="grid" >
+                <!--thead>
                 <tr class="slds-line-height_reset">
                     <th scope="col" class="slds-text-align_right" style="width: 3.25rem;">
                         <div class="slds-th__action slds-th__action_form">
                          <span class="slds-checkbox">
-                        <input type="checkbox" name="options" id="checkbox-13" value="on"/>
+                        <input type="checkbox" name="options" id="checkbox-13" value="on" ng-model="allSelectedCB" ng-click="selectAllFields()"/>
                         <label class="slds-checkbox__label" for="checkbox-13">
                           <span class="slds-checkbox_faux"></span>
                           <span class="slds-form-element__label slds-assistive-text">Select All</span>
@@ -152,12 +168,13 @@
                     </th>
 
                 </tr>
-                </thead>
+                </thead-->
                 <tbody>
-                <tr class="slds-hint-parent" ng-repeat="field in fieldList">
+                <tr class="slds-hint-parent" ng-repeat="field in filteredFieldList track by $index">
                     <td role="gridcell" class="slds-text-align_right" style="width: 3.25rem;">
                         <span class="slds-checkbox">
-                          <input type="checkbox" name="options" id="checkbox-{{field.name}}" value="on" ng-model="field.selected"/>
+                          <input type="checkbox" name="options" id="checkbox-{{field.name}}" value="on"
+                                 ng-model="field.selected" ng-click="updateQuery()"/>
                           <label class="slds-checkbox__label" for="checkbox-{{field.name}}">
                             <span class="slds-checkbox_faux"></span>
                             <span class="slds-form-element__label slds-assistive-text">Select item 1</span>
@@ -173,39 +190,130 @@
 
                 </tbody>
             </table>
-
-
-
+            <div class="slds-grid slds-align_absolute-center">
+                <div>
+                    <button ng-click="previousPage()" class="slds-button slds-button_neutral">Previous</button>
+                </div>
+                <div class="slds-text-body_regular ">
+                    Page {{ curPage+1 }} of {{ maxPages+1 }}
+                </div>
+                <div>
+                    <button  ng-click="nextPage()" class="slds-button slds-button_neutral">Next</button>
+                </div>
+            </div>
         </div>
 
+        <div ng-if="step == 2" >
+            <button class="slds-button slds-button_stateful slds-not-selected slds-button_neutral slds-align_absolute-center" aria-live="assertive">
+              <span class="slds-text-not-selected" ng-click="addCondition()">
+                <svg class="slds-button__icon_stateful slds-button__icon_left" aria-hidden="true">
+                  <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#add')}"></use>
+                </svg>Add condition
+              </span>
+            </button>
+            <br/>
+            <ul class="slds-has-dividers_around-space" ng-repeat="condition in conditions track by $index">
+                <li class="slds-item">
+                    <div class="slds-grid slds-grid_align-center">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <select aria-describedby="error-02" class="slds-select" required=""
+                                            ng-init="condition.andOrSelected = 'AND'" ng-model="condition.andOrSelected">
+                                        <option value="AND">AND</option>
+                                        <option value="OR">OR</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <select aria-describedby="error-02" class="slds-select"
+                                            required="" ng-model="condition.field">
+                                        <option ng-repeat="field in fieldList track by $index" value="{{field.name}}">{{field.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <select aria-describedby="error-02" class="slds-select" required=""
+                                            ng-init="condition.operatorSelected = '='" ng-model="condition.operatorSelected">
+                                        <option value="=">=</option>
+                                        <option value="!=">!=</option>
+                                        <option value="LIKE">LIKE</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <input type="text" id="text-input-id-1" class="slds-input" placeholder="Value" ng-model="condition.value"/>
+                            </div>
+                        </div>
+                        <button class="slds-button slds-button_stateful slds-not-selected slds-button_neutral" aria-live="assertive">
+                          <span class="slds-text-not-selected" ng-click="removeCondition($index)">
+                            <svg class="slds-button__icon_stateful slds-button__icon_left" aria-hidden="true">
+                              <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#remove')}"></use>
+                            </svg>
+                          </span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-        <!-- FOOTER -->
-        <!--footer role="contentinfo" class="slds-p-around--large">
-            <div class="slds-grid slds-grid--align-spread">
-                <p class="slds-col">Salesforce Lightning Design System</p>
-                <p class="slds-col">&copy; alex</p>
+            <div ng-show="showResult" class="demo-only" style="height: 640px;">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" ng-click="showResult = !showResult" title="Close">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"> {{ query }}</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                           {{ queryResult }}
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </div>
-        </footer-->
-        <!-- / FOOTER -->
+
+        <div class="slds-text-body_regular slds-align_absolute-center" ng-show="step == 3">
+
+            <br/>
+            <div class="slds-text-body_regular slds-align_absolute-center" ng-show="selectedObject != ''">
+                {{ queryResult }}
+            </div>
+        </div>
 
     </div>
-    <!-- / REQUIRED SLDS WRAPPER -->
 
     <!-- JAVASCRIPT -->
     <script>
             var app = angular.module('pullerApp', []);
 
-
-
             app.controller('mainCtrl',['$scope', function($scope) {
                 $scope.step = 0;
                 $scope.selectedObject = "";
-
-                var progressPercent = $scope.step*25 + "%";
-
+                $scope.conditions = [{}];
                 $scope.progress = {
-                    "width" : $scope.step*25 + "%"
+                    "width" : $scope.step*50 + "%"
                 };
+                $scope.showResult = false;
+                $scope.allSelectedCB = false;
+
+                $scope.numPerPage = 8;
+                $scope.curPage = 0;
+                $scope.maxPages = 0;
+                $scope.filteredFieldList = [{}];
+
                 $scope.getObjectNames = function () {
                     Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerSLDS.getObjectNames}',
@@ -216,12 +324,8 @@
                 }
 
                 $scope.chooseObject = function (name) {
-                    console.log(name);
                     $scope.selectedObject = name;
-                    $scope.step = 1;
-                    $scope.progress = {
-                        "width" : $scope.step*25 + "%"
-                    };
+                    $scope.nextStep();
                     $scope.showFields();
                 };
 
@@ -232,24 +336,122 @@
                     $scope.selectedObject,
                     function(result, event) {
                         $scope.fieldList = result;
+                        $scope.filteredFieldList = $scope.fieldList.slice(0, $scope.numPerPage);
+                        $scope.maxPages = window.Math.ceil($scope.fieldList.length / $scope.numPerPage) - 1;
+                        $scope.curPage = 0;
                         $scope.$apply();
                     });
                 }
 
+                $scope.nextPage = function () {
+                    $scope.curPage = ($scope.curPage < $scope.maxPages) ? $scope.curPage + 1 : $scope.curPage;
+                    $scope.filteredFieldList = $scope.fieldList.slice($scope.curPage * $scope.numPerPage, ($scope.curPage+1) * $scope.numPerPage);
+                };
+
+                $scope.previousPage = function () {
+                    $scope.curPage = ($scope.curPage > 0) ? $scope.curPage - 1 : $scope.curPage;
+                    $scope.filteredFieldList = $scope.fieldList.slice($scope.curPage * $scope.numPerPage, ($scope.curPage+1) * $scope.numPerPage);
+                };
+
                 $scope.showConditions = function () {
-                    $scope.step = 2;
-                    $scope.progress = {
-                        "width" : $scope.step*25 + "%"
-                    };
+                    $scope.nextStep();
                     console.log($scope.fieldList);
                 }
+
+                $scope.updateQuery = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerSLDS.constructQuery}',
+                        $scope.fieldList,
+                        $scope.selectedObject,
+                        $scope.conditions,
+                        function(result, event) {
+                            $scope.query = result;
+                            $scope.$apply();
+                        });
+                }
+
+                $scope.previousStep = function () {
+                    $scope.step = ($scope.step > 0) ? $scope.step - 1 : 0;
+                    $scope.progress = {
+                        "width" : $scope.step*50 + "%"
+                    };
+                }
+
+                $scope.nextStep = function () {
+                    $scope.step = ($scope.step < 2) ? $scope.step + 1 : 2;
+                    $scope.progress = {
+                        "width" : $scope.step*50 + "%"
+                    };
+                }
+
+                $scope.addCondition = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerSLDS.addCondition}',
+                        $scope.conditions,
+                        function(result, event) {
+                           $scope.conditions = result;
+                           $scope.$apply();
+                        });
+                }
+
+                $scope.removeCondition = function (number) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerSLDS.removeCondition}',
+                        $scope.conditions,
+                        number,
+                        function(result, event) {
+                           $scope.conditions = result;
+                           $scope.$apply();
+                        });
+                }
+
+                $scope.queryDB = function () {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.PullerControllerSLDS.queryDB}',
+                        $scope.fieldList,
+                        $scope.selectedObject,
+                        $scope.conditions,
+                        function(result, event) {
+                            console.log(result);
+                            $scope.queryResult = result;
+                            $scope.showResult = true;
+                            $scope.$apply();
+                        });
+                }
+
+                $scope.selectAllFields = function () {
+                    console.log("CB " + $scope.allSelectedCB)
+                    if ($scope.allSelectedCB == true) {
+                        angular.forEach($scope.fieldList, function(value, key) {
+                            console.log(true);
+                            value.selected = true;
+                        });
+                    } else {
+                        angular.forEach($scope.fieldList, function(value, key) {
+                            console.log(false);
+                            value.selected = false;
+                        });
+                    }
+                };
+
+                $scope.selectField = function () {
+                    var allSelected = true;
+                    angular.forEach($scope.fieldList, function(value, key) {
+                        if (value.selected == false) {
+                            allSelected = false;
+                            $scope.allSelectedCB = false;
+                        }
+                    });
+                    if (allSelected == true) {
+                        $scope.allSelectedCB = true;
+                    }
+                };
 
                 $scope.init = function () {
                     $scope.getObjectNames();
                 };
 
             }]);
-
 
     </script>
     <!-- / JAVASCRIPT -->
