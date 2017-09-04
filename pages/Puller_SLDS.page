@@ -15,13 +15,13 @@
     <div class="slds-scope" ng-app="pullerApp" ng-controller="mainCtrl">
 
         <div class="demo-only" ng-if="step == 0">
-            <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Object</div>
+            <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Object </div>
         </div>
         <div class="demo-only" ng-if="step == 1">
             <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Fields of {{ selectedObject }}</div>
         </div>
         <div class="demo-only" ng-if="step == 2">
-            <div class="slds-text-color_inverse-weak slds-text-heading_mediim slds-text-align_center">Conditions of {{ selectedObject }}</div>
+            <div class="slds-text-color_inverse-weak slds-text-heading_medium slds-text-align_center">Conditions </div>
         </div>
 
         <!-- progress -->
@@ -35,7 +35,7 @@
                 </div>
                 <div class="slds-progress slds-progress_shade">
                     <ol class="slds-progress__list">
-                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 0, 'slds-is-completed': step > 0}">
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 0, 'slds-is-completed': step > 0}" ng-click="setStep(0)">
                             <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 0,
                             'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 0}" aria-describedby="step-0-tooltip">
                                 <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 0">
@@ -44,7 +44,7 @@
                                 <span class="slds-assistive-text">Conditions</span>
                             </button>
                         </li>
-                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 1, 'slds-is-completed': step > 1}">
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 1, 'slds-is-completed': step > 1}" ng-click="setStep(1)">
                             <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 1,
                             'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 1}" aria-describedby="step-1-tooltip">
                                 <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 1" ng-if="fieldList.length > 0">
@@ -53,7 +53,7 @@
                                 <span class="slds-assistive-text">Object's fields</span>
                             </button>
                         </li>
-                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 2, 'slds-is-completed': step > 2}">
+                        <li ng-class="{'slds-progress__item': 'enabled', 'slds-is-active': step == 2, 'slds-is-completed': step > 2}" ng-click="setStep(2)">
                             <button ng-class="{'slds-button' : 'enabled', 'slds-button_icon': step > 2,
                             'slds-progress__marker': 'enabled', 'slds-progress__marker_icon': step > 2}" aria-describedby="step-2-tooltip">
                                 <svg class="slds-button__icon" aria-hidden="true" ng-show="step > 2">
@@ -111,7 +111,7 @@
                             </div>
 
                                 <div id="listbox-unique-id" role="listbox">
-                                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation" >
+                                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-scrollable" role="presentation">
                                             <li role="presentation" class="slds-listbox__item" ng-repeat="name in objectList | filter: objectFilter">
                                               <span ng-click="chooseObject(name)" id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center" role="option">
                                                 <span class="slds-media__body">
@@ -133,42 +133,6 @@
         <div id="step_1" ng-if="step == 1" >
 
             <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout slds-align_absolute-center" role="grid" >
-                <!--thead>
-                <tr class="slds-line-height_reset">
-                    <th scope="col" class="slds-text-align_right" style="width: 3.25rem;">
-                        <div class="slds-th__action slds-th__action_form">
-                         <span class="slds-checkbox">
-                        <input type="checkbox" name="options" id="checkbox-13" value="on" ng-model="allSelectedCB" ng-click="selectAllFields()"/>
-                        <label class="slds-checkbox__label" for="checkbox-13">
-                          <span class="slds-checkbox_faux"></span>
-                          <span class="slds-form-element__label slds-assistive-text">Select All</span>
-                        </label>
-                      </span>
-                        </div>
-                    </th>
-
-                    <th class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
-                        <a href="javascript:void(0);" class="slds-th__action slds-text-link_reset" tabindex="0">
-                            <span class="slds-assistive-text">Sort </span>
-                            <span class="slds-truncate" title="Account Name">Account Name</span>
-                            <div class="slds-icon_container">
-                                <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-is-sortable__icon" aria-hidden="true">
-                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#arrowdown')}"></use>
-                                </svg>
-                            </div>
-                            <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
-                        </a>
-                        <div class="slds-resizable">
-                            <label for="cell-resize-handle-37" class="slds-assistive-text">Account Name column width</label>
-                            <input type="range" min="20" max="1000" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-37" tabindex="0"/>
-                            <span class="slds-resizable__handle">
-                            <span class="slds-resizable__divider"></span>
-                          </span>
-                        </div>
-                    </th>
-
-                </tr>
-                </thead-->
                 <tbody>
                 <tr class="slds-hint-parent" ng-repeat="field in filteredFieldList track by $index">
                     <td role="gridcell" class="slds-text-align_right" style="width: 3.25rem;">
@@ -203,7 +167,7 @@
             </div>
         </div>
 
-        <div ng-if="step == 2" >
+        <div ng-if="step == 2" class="font-size-text-small">
             <button class="slds-button slds-button_stateful slds-not-selected slds-button_neutral slds-align_absolute-center" aria-live="assertive">
               <span class="slds-text-not-selected" ng-click="addCondition()">
                 <svg class="slds-button__icon_stateful slds-button__icon_left" aria-hidden="true">
@@ -212,13 +176,12 @@
               </span>
             </button>
             <br/>
-            <ul class="slds-has-dividers_around-space" ng-repeat="condition in conditions track by $index">
+            <ul class="slds-has-dividers_around-space slds-text-align_center" ng-repeat="condition in conditions track by $index" style=" width: 50%; margin-left:25%">
                 <li class="slds-item">
-                    <div class="slds-grid slds-grid_align-center">
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
                                 <div class="slds-select_container">
-                                    <select aria-describedby="error-02" class="slds-select" required=""
+                                    <select aria-describedby="error-02" class="slds-select" required="" ng-change="updateQuery()"
                                             ng-init="condition.andOrSelected = 'AND'" ng-model="condition.andOrSelected">
                                         <option value="AND">AND</option>
                                         <option value="OR">OR</option>
@@ -230,7 +193,7 @@
                             <div class="slds-form-element__control">
                                 <div class="slds-select_container">
                                     <select aria-describedby="error-02" class="slds-select"
-                                            required="" ng-model="condition.field">
+                                            required="" ng-model="condition.field" ng-change="updateQuery()">
                                         <option ng-repeat="field in fieldList track by $index" value="{{field.name}}">{{field.name}}</option>
                                     </select>
                                 </div>
@@ -239,7 +202,7 @@
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
                                 <div class="slds-select_container">
-                                    <select aria-describedby="error-02" class="slds-select" required=""
+                                    <select aria-describedby="error-02" class="slds-select" required="" ng-change="updateQuery()"
                                             ng-init="condition.operatorSelected = '='" ng-model="condition.operatorSelected">
                                         <option value="=">=</option>
                                         <option value="!=">!=</option>
@@ -250,7 +213,8 @@
                         </div>
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
-                                <input type="text" id="text-input-id-1" class="slds-input" placeholder="Value" ng-model="condition.value"/>
+                                <input type="text" id="text-input-id-1" class="slds-input" placeholder="Value"
+                                       ng-model="condition.value" ng-change="updateQuery()"/>
                             </div>
                         </div>
                         <button class="slds-button slds-button_stateful slds-not-selected slds-button_neutral" aria-live="assertive">
@@ -260,7 +224,6 @@
                             </svg>
                           </span>
                         </button>
-                    </div>
                 </li>
             </ul>
         </div>
@@ -277,21 +240,13 @@
                             </button>
                             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"> {{ query }}</h2>
                         </header>
-                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                           {{ queryResult }}
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="white-space: pre-line">
+                                {{ queryResult }}
                         </div>
                     </div>
                 </section>
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </div>
-
-        <div class="slds-text-body_regular slds-align_absolute-center" ng-show="step == 3">
-
-            <br/>
-            <div class="slds-text-body_regular slds-align_absolute-center" ng-show="selectedObject != ''">
-                {{ queryResult }}
-            </div>
-        </div>
 
     </div>
 
@@ -314,6 +269,8 @@
                 $scope.maxPages = 0;
                 $scope.filteredFieldList = [{}];
 
+                $scope.temp = "LIKE &#39;%CC%&#39; "
+
                 $scope.getObjectNames = function () {
                     Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerSLDS.getObjectNames}',
@@ -325,6 +282,7 @@
 
                 $scope.chooseObject = function (name) {
                     $scope.selectedObject = name;
+                    $scope.conditions = [{}];
                     $scope.nextStep();
                     $scope.showFields();
                 };
@@ -384,12 +342,22 @@
                     };
                 }
 
+                $scope.setStep = function (stepNumber) {
+                    if ($scope.selectedObject != '') {
+                        $scope.step = stepNumber;
+                    }
+                    $scope.progress = {
+                        "width" : $scope.step*50 + "%"
+                    };
+                }
+
                 $scope.addCondition = function () {
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.PullerControllerSLDS.addCondition}',
                         $scope.conditions,
                         function(result, event) {
                            $scope.conditions = result;
+                           $scope.updateQuery();
                            $scope.$apply();
                         });
                 }
@@ -401,6 +369,7 @@
                         number,
                         function(result, event) {
                            $scope.conditions = result;
+                           $scope.updateQuery();
                            $scope.$apply();
                         });
                 }

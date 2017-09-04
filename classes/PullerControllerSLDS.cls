@@ -54,14 +54,14 @@ public class PullerControllerSLDS {
             String orCondition = '';
 
             for (Condition c : conditions) {
-                if (c.andOrSelected == 'AND' && !String.isEmpty(c.value)) {
+                if (c.andOrSelected == 'AND' && !String.isEmpty(c.value) && c.field != null) {
                     andCondition += 'AND ' + c.field + ' ' + c.operatorSelected;
                     if (c.operatorSelected == 'LIKE') {
                         andCondition += ' \'%' + c.value + '%\' ';
                     } else {
                         andCondition += ' \'' + c.value + '\' ';
                     }
-                } else if (c.andOrSelected == 'OR' && !String.isEmpty(c.value)) {
+                } else if (c.andOrSelected == 'OR' && !String.isEmpty(c.value) && c.field != null) {
                     orCondition += 'OR ' + c.field + ' ' + c.operatorSelected;
                     if (c.operatorSelected == 'LIKE') {
                         orCondition += ' \'%' + c.value + '%\' ';
